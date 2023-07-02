@@ -17,7 +17,7 @@ const deleteUser = async (db: any, req: Request, res: Response) => {
             res.writeHead(StatusCode.SUCCESSFULLY_DELETED, { 'Content-Type': 'text/plain' });
             res.end(ResponseMessages.SUCCESSFULLY_DELETED);
         } else {
-            res.writeHead(StatusCode.NOT_FOUND);
+            res.writeHead(StatusCode.NOT_FOUND, { 'Content-Type': 'text/plain' });
             res.end(ErrorMessages.USER_NOT_FOUND);
         }
     } else {

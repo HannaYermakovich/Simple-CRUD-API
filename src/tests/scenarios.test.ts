@@ -1,7 +1,7 @@
 import { server } from '../server';
 
 import request from 'supertest';
-import { ErrorMessages, StatusCode } from '../const/const';
+import { ErrorMessages, ResponseMessages, StatusCode } from '../const/const';
 import { User } from '../const/types';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -132,6 +132,7 @@ describe('scenario 2', () => {
         const mockUsers = [
           { name: 'Tim', age: 25, hobbies: ['football', 'music'] },
           { name: 'Rob', age: 30, hobbies: ['reading', 'painting'] },
+          { name: 'Lili', age: 28, hobbies: ['dancing', 'ski'] },
         ];
     
         for (const mockUser of mockUsers) {
@@ -158,7 +159,46 @@ describe('scenario 2', () => {
         expect(res.statusCode).toEqual(StatusCode.OK);
         expect(res.headers['content-type']).toEqual('application/json');
         expect(res.body.data).toEqual(users);
-      });
+    });
+
+    it('should answer with status code 204 if the record is found and deleted when we have several users after DELETE request', async () => {
+        userId = users[2]?.id;
+
+        const res = await request(server)
+            .delete(`/users/${userId}`)
+
+        expect(res.statusCode).toEqual(StatusCode.SUCCESSFULLY_DELETED);
+        expect(res.headers['content-type']).toEqual('text/plain');
+
+        const allUsers = await request(server)
+            .get('/users/')
+            .set('Accept', 'application/json');
+        expect(allUsers.body.data.length).toEqual(2);
+    });
+
+    it('should answer with status code 404 and corresponding message if user id does not exist during DELETE request', async () => {
+        userId = uuidv4();
+        
+        const res = await request(server)
+            .delete(`/users/${userId}`)
+            .set('Accept', 'application/json')
+
+        expect(res.statusCode).toEqual(StatusCode.NOT_FOUND);
+        expect(res.headers['content-type']).toEqual('text/plain');
+        expect(res.text).toEqual(ErrorMessages.USER_NOT_FOUND);
+    });
+
+    it('should answer with status code 400 and corresponding message if userId is invalid during DELETE request', async () => {
+        userId = users[0]?.id;
+        
+        const res = await request(server)
+            .delete(`/users/${userId}aa`)
+            .set('Accept', 'application/json')
+
+        expect(res.statusCode).toEqual(StatusCode.BAD_REQUEST);
+        expect(res.headers['content-type']).toEqual('text/plain');
+        expect(res.text).toEqual(ErrorMessages.INVALID_USER_ID);
+    });
 })
 
 describe('scenario 3', () => {
@@ -231,7 +271,7 @@ describe('scenario 3', () => {
         expect(res.body.data).toEqual(mockUser);
     });
 
-    it('should answer with status code 400 and corresponding message if userId is invalid', async () => {
+    it('should answer with status code 400 and corresponding message if userId is invalid during GET all users request', async () => {
         userId = users[0]?.id;
         
         const res = await request(server)
@@ -243,7 +283,7 @@ describe('scenario 3', () => {
         expect(res.text).toEqual(ErrorMessages.INVALID_USER_ID);
     });
 
-    it('should answer with status code 404 and corresponding message if user id does not exist', async () => {
+    it('should answer with status code 404 and corresponding message if user id does not exist during GET all users request', async () => {
         userId = uuidv4();
         
         const res = await request(server)
@@ -255,7 +295,7 @@ describe('scenario 3', () => {
         expect(res.text).toEqual(ErrorMessages.USER_NOT_FOUND);
     });
 
-    it('should answer with status code 400 and corresponding message if userId is invalid', async () => {
+    it('should answer with status code 400 and corresponding message if userId is invalid during PUT all users request', async () => {
         userId = users[0]?.id;
         
         const res = await request(server)
@@ -267,7 +307,7 @@ describe('scenario 3', () => {
         expect(res.text).toEqual(ErrorMessages.INVALID_USER_ID);
     });
 
-    it('should answer with status code 404 and corresponding message if user id does not exist', async () => {
+    it('should answer with status code 404 and corresponding message if user id does not exist during PUT all users request', async () => {
         userId = uuidv4();
         
         const res = await request(server)

@@ -15,7 +15,7 @@ const getUserById = async (db: any, req: Request, res: Response) => {
                 data: user
             }));
         } else {
-            res.writeHead(StatusCode.NOT_FOUND);
+            res.writeHead(StatusCode.NOT_FOUND, { 'Content-Type': 'text/plain' });
             res.end(ErrorMessages.USER_NOT_FOUND);
         }
     
