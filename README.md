@@ -16,7 +16,7 @@ Please follow the steps below:
 
 5. Send requests to the following URL: **http://localhost:4000/users**.
 **Note:** The port number (**4000**) may vary (e.g., 3000, 5000, or 8080). Here, you can make requests and verify the responses.
-**Note:** ALL MY ENDPOINTS DON'T INCLUSE **API/USERS**. ONLY **/USERS**
+**Note:** ALL MY ENDPOINTS DON'T INCLUDE **API/USERS**. ONLY **/USERS**
 
 7. Test all the available methods and endpoints.
 
