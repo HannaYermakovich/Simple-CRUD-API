@@ -18,6 +18,15 @@ Please follow the steps below:
 **Note:** The port number (**4000**) may vary (e.g., 3000, 5000, or 8080). Here, you can make requests and verify the responses.
 **Note:** ALL MY ENDPOINTS DON'T INCLUDE **API/USERS**. ONLY **/USERS**
 
+7. To test **POST** method, please, use following schema: 
+```bash
+export interface User {
+    id?: string;
+    name: string;
+    age: number;
+    hobbies: string[];
+}
+```
 7. Test all the available methods and endpoints.
 
 8. If you want to simulate **a server error (500)**, add the following code to line 47 of the `server.ts` file: **throw new Error('Something went wrong');**.
